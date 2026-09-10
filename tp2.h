@@ -279,20 +279,21 @@ List<T>::List(const List<T> &other) {
     this->tail = nullptr;
     this->size = 0;
 
-    if (other.size==0){return}
+    if (other.size==0)return;
 
     Node* actual= other.head;
     this->head=new Node(actual->value);
     actual=actual->next;
     this->tail=this->head;
-
+    this->size++;
 
     while (actual!=nullptr)
     {
     Node* nuevo=new Node(actual->value);
+    nuevo->next=nullptr;
     nuevo->prev=this->tail;
     this->tail->next=nuevo;
-    this.tail=nuevo;
+    this->tail=nuevo;
     this->size++;
     actual=actual->next;
     }
