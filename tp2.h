@@ -287,6 +287,9 @@ List<T>::List(const List<T> &other) {
     this->tail=this->head;
     this->size++;
 
+    this->head->prev=nullptr;
+    this->head->next=nullptr;
+
     while (actual!=nullptr)
     {
     Node* nuevo=new Node(actual->value);
@@ -304,11 +307,55 @@ template<typename T>
 List<T> &List<T>::operator=(const List<T> &other) {
     // TODO: reemplazar la lista actual con una copia independiente de other
     // La memoria anterior no debe perderse, sino liberarse correctamente
-}
+    if (this==&other){return this;}
+    if (this->size!=0)
+    {
+    Node* actual=this->head;
+    while (actual!=nullptr)
+    {
+        Node* temporal = actual;
+        actual= actual->next;
+        delete temporal;
+    }
+    this->head = nullptr;
+    this->tail = nullptr;
+    this->size = 0;
 
+    if (other.size==0)return this;
+
+    Node* actual= other.head;
+    this->head=new Node(actual->value);
+    actual=actual->next;
+    this->tail=this->head;
+    this->size++;
+
+    this->head->prev=nullptr;
+    this->head->next=nullptr;
+
+    while (actual!=nullptr)
+    {
+    Node* nuevo=new Node(actual->value);
+    nuevo->next=nullptr;
+    nuevo->prev=this->tail;
+    this->tail->next=nuevo;
+    this->tail=nuevo;
+    this->size++;
+    actual=actual->next;
+    }
+    }
+    return this;
+}
 template<typename T>
 List<T>::~List() {
     // TODO: liberar todos los nodos que queden con delete.
+    Node* actual=this->head;
+    while (actual!=nullptr)
+    {
+        Node* temporal = actual;
+        actual= actual->next;
+        delete temporal;
+    }
+    
 }
 
 template<typename T>
