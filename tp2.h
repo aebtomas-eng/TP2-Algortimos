@@ -360,31 +360,78 @@ List<T>::~List() {
 
 template<typename T>
 bool List<T>::is_empty() const {
-    // TODO: devolver si la lista está vacía.
-    return true;
+    if (this->size==0) return true;
+    return false;
 }
 
 template<typename T>
 size_t List<T>::length() const {
     // TODO: devolver la cantidad de elementos.
-    return 0;
+    return this->size;
 }
 
 template<typename T>
 void List<T>::insert_head(const T& value) {
     // TODO: reservar un nodo con new, enlazarlo al principio y
     // actualizar head/tail/size.
+    Node* Nodito = new Node(value);
+    if (this->size==0)
+    {
+        this->tail=Nodito;
+        Nodito->next=nullptr;
+        Nodito->prev=nullptr;
+    }
+    else{
+    this->head->prev=Nodito;
+    Nodito->next=this->head;
+    Nodito->prev=nullptr;
+}
+this->head=Nodito;
+this->size++;
 }
 
 template<typename T>
 void List<T>::insert_tail(const T& value) {
     // TODO: reservar un nodo con new, enlazarlo al final y
     // actualizar head/tail/size.
+    Node* Nodito = new Node(value);
+    if (this->size==0)
+    {
+        this->head=Nodito;
+        Nodito->next=nullptr;
+        Nodito->prev=nullptr;
+    }
+    else{
+        this->tail->next=Nodito;
+        Nodito->prev=this->tail;
+        Nodito->next=nullptr;
+    }
+    this->tail=Nodito;
+    this->size++;
 }
 
 template<typename T>
 T List<T>::pop_head() {
     // TODO: sacar el primer nodo (con delete), devolver su valor.
+    valor = this->head->value;
+    Node*  direccion_vieja= this->head;
+    if (this->size==0)
+    {
+        return;
+    }
+    if (this->size==1){
+    this->head=nullptr;
+    this->tail=nullptr;
+}
+else{
+
+    this->head = this->head->next;
+    this->head->prev=nullptr;
+}
+
+delete direccion_vieja;
+this->size--;
+return valor;
 }
 
 template<typename T>
