@@ -437,16 +437,37 @@ return valor;
 template<typename T>
 T List<T>::pop_tail() {
     // TODO: sacar el último nodo (con delete), devolver su valor.
+    valor = this->tail->value;
+    Node*  direccion_vieja= this->tail;
+    if (this->size==0)
+    {
+        return;
+    }
+    if (this->size==1)
+    {
+    this->head=nullptr;
+    this->tail=nullptr;
+    }
+    else{
+        this->tail=this->tail->prev;
+        this->tail->next=nullptr;
+    }
+delete direccion_vieja;
+this->size--;
+return valor;
+    
 }
 
 template<typename T>
 const T& List<T>::peek_head() const {
     // TODO: devolver el valor del principio.
+    return this->head->value;
 }
 
 template<typename T>
 const T& List<T>::peek_tail() const {
     // TODO: devolver el valor del final.
+    return this->tail->value;
 }
 
 template <typename T>
