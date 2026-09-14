@@ -55,7 +55,7 @@ public:
      * Q (Post): is_empty() == true && length() == 0.
      */
     List();
-
+    
     /* Constructor por copia copia.
      * P (Pre):  other es una List válida.
      * Q (Post): *this ahora contiene una copia independiente de other,
@@ -274,8 +274,30 @@ List<T>::List() {
 
 template<typename T>
 List<T>::List(const List<T> &other) {
-    // TODO: crear la nueva lista, como una copia independiente de other
+this->head = nullptr;
+    this->tail = nullptr;
+    this->size = 0;
+
+    if (other.size==0){return}
+
+    Node* actual= other.head;
+    this->head=new Node(actual->value);
+    actual=actual->next;
+    this->tail=this->head;
+
+
+    while (actual!=nullptr)
+    {
+    Node* nuevo=new Node(actual->value);
+    nuevo->prev=this->tail;
+    this->tail->next=nuevo;
+    this.tail=nuevo;
+    this->size++;
+    actual=actual->next;
+    }
+       
 }
+
 
 template<typename T>
 List<T> &List<T>::operator=(const List<T> &other) {
