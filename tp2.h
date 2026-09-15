@@ -307,12 +307,10 @@ template<typename T>
 List<T> &List<T>::operator=(const List<T> &other) {
     // TODO: reemplazar la lista actual con una copia independiente de other
     // La memoria anterior no debe perderse, sino liberarse correctamente
-    if (this==&other){return this;}
-    if (this->size!=0)
-    {
+    if (this==&other)return *this;
+
     Node* actual=this->head;
-    while (actual!=nullptr)
-    {
+    while (actual!=nullptr){
         Node* temporal = actual;
         actual= actual->next;
         delete temporal;
@@ -321,19 +319,20 @@ List<T> &List<T>::operator=(const List<T> &other) {
     this->tail = nullptr;
     this->size = 0;
 
-    if (other.size==0)return this;
+    if (other.size==0)return *this;
 
-    Node* actual= other.head;
-    this->head=new Node(actual->value);
-    actual=actual->next;
+    actual= other.head;
+    this->head= new Node(actual->value);
+    this->head->prev = nullptr;
+    this->head->next = nullptr;
     this->tail=this->head;
     this->size++;
+    actual=actual->next;
 
     this->head->prev=nullptr;
     this->head->next=nullptr;
 
-    while (actual!=nullptr)
-    {
+    while (actual!=nullptr){
     Node* nuevo=new Node(actual->value);
     nuevo->next=nullptr;
     nuevo->prev=this->tail;
@@ -342,8 +341,8 @@ List<T> &List<T>::operator=(const List<T> &other) {
     this->size++;
     actual=actual->next;
     }
-    }
-    return this;
+
+    return *this;
 }
 template<typename T>
 List<T>::~List() {
@@ -417,7 +416,7 @@ T List<T>::pop_head() {
     Node*  direccion_vieja= this->head;
     if (this->size==0)
     {
-        return;
+        return valor;
     }
     if (this->size==1){
     this->head=nullptr;
@@ -441,7 +440,7 @@ T List<T>::pop_tail() {
     Node*  direccion_vieja= this->tail;
     if (this->size==0)
     {
-        return;
+        return valor;
     }
     if (this->size==1)
     {
@@ -479,7 +478,7 @@ typename List<T>::ListIter List<T>::create_head() {
 template <typename T>
 typename List<T>::ListIter List<T>::create_tail() {
     // TODO: retornar un iterador parado en el final de la lista.
-    return ListIter(this, this->head);
+    return ListIter(this, this->tail);
 }
 
 /* ---------------------------------------------------------------
@@ -565,6 +564,7 @@ bool List<T>::ListIter::insert_after(const T&value) {
         this->list->tail=Nodito;
         Nodito->next=nullptr;
         Nodito->prev=nullptr;
+        this->curr = Nodito;
     }
     else if (this->curr==this->list->tail)
     {
@@ -581,7 +581,7 @@ bool List<T>::ListIter::insert_after(const T&value) {
     }
 
     this->list->size++;
-    return false;
+    return true;
 }
 
 template <typename T>
@@ -592,7 +592,8 @@ bool List<T>::ListIter::insert_before(const T&value) {
         this->list->head=Nodito;
         this->list->tail=Nodito;
         Nodito->next=nullptr;
-        Nodito->prev=nullptr;        
+        Nodito->prev=nullptr;    
+        this->curr=Nodito;    
     }
     else if (this->curr==this->list->head){
         Nodito->next=this->curr;
@@ -609,25 +610,25 @@ bool List<T>::ListIter::insert_before(const T&value) {
 
     }
     this->list->size++;
-    return false;
+    return true;
 }
 
 template <typename T>
 T List<T>::ListIter::remove() {
     // TODO: sacar el nodo actual (con delete), reposicionar el iterador
     // y devolver el valor que tenía.
+    T valor = this->curr->value;
     if (this->list->size==0)
     {
-        return;
+        return valor;
     }
-    T valor = this->curr->value;
     if (this->curr==this->list->tail)
     {
         Node* Noditoauxiliarlindo = this->curr;
         this->curr=this->curr->prev;
         this->curr->next=nullptr;
         this->list->tail=this->curr;
-        delete Noditoauxiliarlindo //pobrecito
+        delete Noditoauxiliarlindo; //pobrecito
     }
     else{
         Node* Noditoauxiliarlindo = this->curr->next;
@@ -642,4 +643,3 @@ T List<T>::ListIter::remove() {
 }
 
 #endif // TP2_H
-
