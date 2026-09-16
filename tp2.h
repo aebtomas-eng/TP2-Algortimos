@@ -282,62 +282,26 @@ List<T>::List(const List<T> &other) {
     if (other.size==0)return;
 
     Node* actual= other.head;
-    this->head=new Node(actual->value);
-    actual=actual->next;
-    this->tail=this->head;
-    this->size++;
-
-    this->head->prev=nullptr;
-    this->head->next=nullptr;
-
-    while (actual!=nullptr)
-    {
-    Node* nuevo=new Node(actual->value);
-    nuevo->next=nullptr;
-    nuevo->prev=this->tail;
-    this->tail->next=nuevo;
-    this->tail=nuevo;
-    this->size++;
+    while (actual!=nullptr){
+    this -> insert_tail(actual->value);
     actual=actual->next;
     }
        
 }
-
 template<typename T>
 List<T> &List<T>::operator=(const List<T> &other) {
     // TODO: reemplazar la lista actual con una copia independiente de other
     // La memoria anterior no debe perderse, sino liberarse correctamente
     if (this==&other)return *this;
 
-    Node* actual=this->head;
+    Node* actual=other.head;
     while (!is_empty()){
         pop_head();
     }
-    this->head = nullptr;
-    this->tail = nullptr;
-    this->size = 0;
-
-    if (other.size==0)return *this;
-
-    actual= other.head;
-    this->head= new Node(actual->value);
-    this->head->prev = nullptr;
-    this->head->next = nullptr;
-    this->tail=this->head;
-    this->size++;
-    actual=actual->next;
-
-    this->head->prev=nullptr;
-    this->head->next=nullptr;
 
     while (actual!=nullptr){
-    Node* nuevo=new Node(actual->value);
-    nuevo->next=nullptr;
-    nuevo->prev=this->tail;
-    this->tail->next=nuevo;
-    this->tail=nuevo;
-    this->size++;
-    actual=actual->next;
+        this -> insert_tail(actual->value);
+        actual=actual->next;
     }
 
     return *this;
