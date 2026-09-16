@@ -310,10 +310,8 @@ List<T> &List<T>::operator=(const List<T> &other) {
     if (this==&other)return *this;
 
     Node* actual=this->head;
-    while (actual!=nullptr){
-        Node* temporal = actual;
-        actual= actual->next;
-        delete temporal;
+    while (!is_empty()){
+        pop_head();
     }
     this->head = nullptr;
     this->tail = nullptr;
@@ -347,12 +345,8 @@ List<T> &List<T>::operator=(const List<T> &other) {
 template<typename T>
 List<T>::~List() {
     // TODO: liberar todos los nodos que queden con delete.
-    Node* actual=this->head;
-    while (actual!=nullptr)
-    {
-        Node* temporal = actual;
-        actual= actual->next;
-        delete temporal;
+    while (!is_empty()){
+        pop_head();
     }
     
 }
@@ -622,13 +616,26 @@ T List<T>::ListIter::remove() {
     {
         return valor;
     }
-    if (this->curr==this->list->tail)
+    if (this-> list->size==1){
+        delete this->curr;
+        this->list->head= nullptr;
+        this->list->tail= nullptr;
+    }
+    else if (this->curr==this->list->tail)
     {
         Node* Noditoauxiliarlindo = this->curr;
         this->curr=this->curr->prev;
         this->curr->next=nullptr;
         this->list->tail=this->curr;
         delete Noditoauxiliarlindo; //pobrecito
+    }
+    else if(this->curr==this->list->head){
+        Node* Noditoauxiliarlindo = this->curr->next;
+        this->curr->next->prev= nullptr;
+        this->list->head = this->curr->next;
+
+        delete this->curr;
+        this->curr=Noditoauxiliarlindo;
     }
     else{
         Node* Noditoauxiliarlindo = this->curr->next;
